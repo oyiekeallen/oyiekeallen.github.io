@@ -159,8 +159,11 @@ $(document).ready(function(){
 ********************************************************/
 $(function(){
       $(".animated-intro").typed({
-        strings: ["Well, that's me right there.",
-        		  "I'm an inquisitive, energetic and  skilled in leadership, with a strong foundation in math, logic, and cross-platform programming."], 		
+		strings: [
+			"Welcome, I'm glad you made it, let me introduce myself.",
+			"How would I describe myself? Well I would like to think I am an inquisitive, energetic and skilled in leadership, with a strong foundation in math, logic and cross-platform programming.",
+			"Keep scrolling there is more to see."
+		], 		
         typeSpeed: 0,
         backSpeed: 0,
         loop: true,
@@ -516,4 +519,158 @@ if($("#particles-js").width() > 0){
 
 
 
+/*************************************************
+ 		Portfolio 
+*************************************************/
 
+function change(state) {
+	//console.log(state);
+	if (state === null) { // initial page
+
+	} else { // page added with pushState
+			//var ajaxurl="http://alexgurghis.com/themes/resumedojo/wp-content/plugins/bedojo/";
+			var ajaxurl="wp-admin/admin-ajax.html";
+			//console.log(state.bedojo_id);
+			//makePOSTRequest("/", "action=open_article&article=" + state.url);
+			if( state.bedojo_id >0)
+			{
+			data = {bedojoid:state.bedojo_id,tags:1,stats:1,action:"bedojo_open_project"}
+			// We can also pass the url value separately from ajaxurl for front end AJAX implementations
+			jQuery.post(ajaxurl, data, function (response) {
+				eval(response);
+			});
+			}
+	}
+}
+jQuery(window).unbind("popstate").on("popstate", function (e) {
+	change(e.originalEvent.state);
+});
+(function (original) { // overwrite history.pushState so that it also calls
+	// the change function when called
+	history.pushState = function (state) {
+		change(state);
+		return original.apply(this, arguments);
+	};
+})(history.pushState);
+
+(function ($) {
+			window.onload = function () {
+				jQuery("a.bbbview").unbind("click").on("click",function(e){
+					e.preventDefault();
+					var state = {url: $(this).attr("href"), bedojo_id:$(this).attr("bedojo_id")};
+					window.history.pushState(state, "", jQuery(this).attr("href"));
+					var bbbtop=jQuery(this).parent().parent().parent().find(".bbbimage img").offset().top-jQuery(window).scrollTop()-parseInt(jQuery(this).parent().parent().parent().find(".bbbimage img").css("margin-top"));
+					var bbbleft=jQuery(this).parent().parent().parent().find(".bbbimage img").offset().left-jQuery(window).scrollLeft();
+					var bbbimgsrc=jQuery(this).parent().parent().parent().find(".bbbimage img").attr("src");
+					var bbbwidth=jQuery(this).parent().parent().parent().find(".bbbimage img").width();
+					var bbbheight=jQuery(this).parent().parent().parent().find(".bbbimage img").height();
+					if(jQuery("#bbblightboximage").length==0)
+					{
+						jQuery("body").append('<img id="bbblightboximage">');
+					}
+					//jQuery("#bbblightboximage").attr("datatop",jQuery(this).parent().parent().parent().find(".bbbimage img").offset().top-parseInt(jQuery(this).parent().parent().parent().find(".bbbimage img").css("margin-top")));
+					jQuery("#bbblightboximage").attr("datatop",jQuery(this).parent().parent().parent().find(".bbbimage img").offset().top-parseInt(jQuery(this).parent().parent().parent().find(".bbbimage img").css("margin-top")));
+					jQuery("#bbblightboximage").attr("dataleft",jQuery(this).parent().parent().parent().find(".bbbimage img").offset().left);
+					jQuery("#bbblightboximage").attr("datawidth",bbbwidth);
+					jQuery("#bbblightboximage").attr("dataheight",bbbheight);
+					jQuery("#bbblightboximage").attr("src",bbbimgsrc).attr("src",jQuery(this).parent().parent().parent().find(".bbbimage img").attr("data"));
+					jQuery("#bbblightboximage").removeAttr( "style" ).css({"position":"fixed","top":bbbtop+"px","left":bbbleft+"px","height":bbbheight+"px","width":bbbwidth+"px"});
+					jQuery("#bbblightbox").removeAttr("style").show().css("display","table");
+					var bbbleft=parseInt(jQuery(window).width()/2-400);
+					var bbbtop=parseInt(jQuery(window).height()/2-150);
+					var bbbtran=jQuery(this).parent().parent().parent().find(".bbbimage").attr("bbbtran",jQuery(this).css("transition"));
+					jQuery(this).parent().parent().parent().find(".bbbimage").css({"transition":"none","opacity":"0"});
+					//jQuery("#bbblightboximage").css({"transition":"all 500ms cubic-bezier(0.7, 0, 0.3, 1) 0ms","top":bbbtop-30+"px","left":bbbleft-60+"px","height":300+"px","width":400+"px","opacity":1,"border":"30px solid #fff"});
+					jQuery("#bbblightboximage").css({"transition":"all 500ms cubic-bezier(0.7, 0, 0.3, 1) 0ms","top":60+"px","left":(parseInt(jQuery(window).width()/2)-202/2)+"px","height":158+"px","width":202+"px","opacity":1,"border":"15px solid #fff"});
+					jQuery("#bbblightbox").css({"opacity":1});
+					//jQuery("#bbblightbox .bbbinfo").html(jQuery(this).parent().parent().parent().find(".bbbinfo").html()).css({"opacity":"1","padding-top":"20px"});
+					//jQuery(this).parent().parent().parent().find(".bbbimage").delay(500).queue(function(){jQuery(this).css({"transition":bbbtran,"opacity":"1"});});
+					jQuery("#bbblightbox .close").css("z-index",999);
+
+					e.preventDefault(); return false;
+
+				});
+				jQuery("#bbblightbox .close i").click(function(){
+
+					var state = {url: "http://alexgurghis.com/themes/resumedojo/portofolio/", bedojo_id:0};
+					window.history.pushState(state, "", state.url);
+					setTimeout(function(){jQuery(".bbbimage, #bbblightboximage,#bbblightbox .bbbinfo").removeAttr("style");jQuery("#bbblightbox .bbbinfo").html("");jQuery("#bbblightboximage").hide();},500);
+					jQuery("#bbblightboximage").css({"transition": "all 500ms cubic-bezier(0.7, 0, 0.3, 1) 0ms","border-width":"0px","top" : parseInt(jQuery("#bbblightboximage").attr("datatop")-jQuery(window).scrollTop())+"px","left": parseInt(jQuery("#bbblightboximage").attr("dataleft")-jQuery(window).scrollLeft())+"px","width": parseInt(jQuery("#bbblightboximage").attr("datawidth"))+"px","height": parseInt(jQuery("#bbblightboximage").attr("dataheight"))+"px", "opacity":"1"});
+					jQuery("#bbblightbox").css({"transition":"all 300ms cubic-bezier(0.7, 0, 0.3, 1) 0ms","opacity":0}).delay(350).hide(0).scrollTop(0);
+					jQuery("body,html").css("overflow-y","auto");
+					jQuery("#bbblightbox .bedojo_blocks").remove();
+				});
+				jQuery("#bbblightbox").scroll(function(){
+				jQuery("#bbblightboximage").css({"transition": "none","top":(60-jQuery("#bbblightbox").scrollTop())+"px"});
+				});
+				
+			}
+})(jQuery);
+
+jQuery(".bbbshotsfields div[fid]").on("click",function(){
+	jQuery(this).parent().parent().parent().parent().closest("div.bbbshotsfields").parent().find(".bbbshot:not(.bedojoFID"+jQuery(this).attr("fid")+")").addClass("bbbhide").removeClass("bbbshow");
+	jQuery(this).parent().parent().parent().parent().closest("div.bbbshotsfields").parent().find(".bbbshot.bedojoFID"+jQuery(this).attr("fid")).removeClass("bbbhide").addClass("bbbshow");
+	jQuery(this).parent().find("div").removeClass("sel");
+	jQuery(this).addClass("sel");
+});
+
+jQuery(function($) {
+
+	document.getElementById('contact-agent-button').addEventListener('click', function(e) {
+
+		if(jQuery("#contact").valid()) {
+
+			jQuery('#contact-agent-button').css('display', 'none');
+			jQuery('.submit-loading').css('display', 'inline-block');
+			
+			jQuery("#contact").submit();
+
+		} 
+
+		e.preventDefault();
+	});
+
+	jQuery('#contact').validate({
+		rules: {
+			name: {
+				required: true
+			},
+			email: {
+				required: true,
+				email: true
+			},
+			message: {
+				required: true
+			}
+		},
+		messages: {
+			name: {
+				required: "You have a name don&#039;t you?"
+			},
+			email: {
+				required: "No email, no message."
+			},
+			message: {
+				required: "You have to write something to send this form."
+			}
+		},
+		submitHandler: function(form) {
+			jQuery('#contact-agent-button').css('display', 'none');
+			jQuery('.submit-loading').css('display', 'inline-block');
+			jQuery(form).ajaxSubmit({
+				type: "POST",
+				data: jQuery(form).serialize(),
+				url: '', 
+				success: function(data) {
+					jQuery('#contact-agent-button').css('display', 'inline-block');
+					jQuery('.submit-loading').css('display', 'none');
+					jQuery('.contact-success').css('display', 'inline-block');
+				},
+				error: function(data) {
+					jQuery('.contact-error').css('display', 'inline-block');
+				}
+			});
+		}
+	});
+
+});
