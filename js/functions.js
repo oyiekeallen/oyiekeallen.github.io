@@ -97,16 +97,6 @@ $(document).ready(function(){
 	LightBox for dribbleshots portofolio 
 	********************************************/
 
-	if ($('.hover-shot').length > 0){
-		$('.hover-shot').magnificPopup({
-		  delegate: 'a', 
-		  type: 'image',
-		  gallery:{
-		    enabled:true
-		  }
-		});
-	}
-
 		/** menu close buton **/
 		$('.navbar-toggle').click(function(){
 			$(this).toggleClass('isClosed');
